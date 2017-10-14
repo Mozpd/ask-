@@ -10,6 +10,8 @@ const Question = require('../model/Question');
 const User = require('../model/User');
 //引入at模块
 const at = require('../common/at');
+//引入reply 表
+const Reply = require('../model/Reply');
 //新建问题的处理函数
 exports.create = (req,res,next)=>{
     res.render('create-question',{
@@ -100,14 +102,26 @@ exports.index = (req,res,next)=>{
         //问题的访问量+1
         question.click_num += 1;
         question.save();
-        Question.getOtherQuestions(question.author._id,question._id,(err,questions)=>{
-            return res.render('question',{
-                title:'问题详情页面',
-                layout:'indexTemplate',
-                question:question,
-                others:questions
+        //来获取文章对应所有的回复
+        //reply 表
+        Reply.getRepliesByQuestionId(question_id,(err,replies)=>{
+            if(replies.length > 0){
+            replies.forEach((reply,index)=>{
+                reply.content = at.linkUsers(reply.content)
+            })
+            }
+            Question.getOtherQuestions(question.author._id,question._id,(err,questions)=>{
+                return res.render('question',{
+                    title:'问题详情页面',
+                    layout:'indexTemplate',
+                    question:question,
+                    others:questions,
+                    replies:replies,
+                })
             })
         })
+
     })
 
-}
+};
+

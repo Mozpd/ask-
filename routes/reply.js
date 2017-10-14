@@ -62,8 +62,20 @@ exports.add = (req,res,next)=>{
                 //发消息
                 message.sendReplyMessage(question_author,req.session.user._id,reply.question_id._id,reply._id);
             }
+            return res.json({message:'success'});
         }).catch(err=>{
             res.end(err);
         });
     }
-}
+};
+exports.replayAll = (req,res,next)=>{
+    console.log(1)
+    let id = req.params.id;
+    console.log(id);
+    Reply.getRepliesByQuestionIdAll(id,(err,all)=>{
+        return res.render('reply-list',{
+            all:all,
+            layout:''
+        })
+    })
+};

@@ -73,6 +73,6 @@ router.post('/showMessagesPage/:page',auth.userRequired,message.showMessagesPage
 
 //**************************************回复*************************************
 router.post('/:question_id/reply',auth.userRequired,reply.add);//一级回复
-
+router.get('/allReplies/:id',reply.replayAll);
 module.exports = router;
 
