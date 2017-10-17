@@ -27,7 +27,9 @@
             </div>
             <div class="mod-footer">
                 <div class="meta clearfix">
-                    <span class="text-color-999 pull-right"><%= reply.create_time_ago() %></span>
+                    <span class="text-color-999 pull-right">
+                        <%= reply.create_time_ago() %>
+                    </span>
                     <span class="operate">
                         <a class="agree">
                             <i class="fa fa-thumbs-o-up"></i>
@@ -39,34 +41,13 @@
                     </span>
                     <span class="operate">
                         <a class="aw-add-comment">
-                            <i class="fa fa-commenting-o"></i>
-                            <%= reply.comment_num%>条回复
+                            <i class="fa fa-comment"></i>
+                            <%= reply.comment_num %>条评论
                         </a>
                     </span>
                 </div>
-                <!--回复的DIV留在这里，以后再做-->
-               <!-- <div class="aw-comment-box">
-                    <div class="aw-comment-list">
-                        <div align="center" class="aw-padding10">暂无回复</div>
-                        <form action="">
-                            <div class="aw-comment-box-main">
-                                <textarea id="huifu" name="meg_content">
-
-                                </textarea>
-                                <div class="aw-comment-box-btn" style="display: block;">
-                                    <span class="pull-right">
-                                        <a class="btn btn-mini btn-success">
-                                            评论
-                                        </a>
-                                        <a class="btn btn-mini btn-gray close-comment-box">
-                                            取消
-                                        </a>
-                                    </span>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>-->
+                <!--二级回复的位置在这里-->
+                <% include comment-list %>
             </div>
         </div>
         <% }) %>

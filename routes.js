@@ -14,6 +14,8 @@ const user = require('./routes/user');
 const message = require('./routes/message');
 //引入一级回复的处理函数
 const reply = require('./routes/reply');
+//引入二级回复的处理函数
+const comment = require('./routes/comment');
 //引入权限文件
 const auth = require('./common/auth');
 //************************************首页***************************************
@@ -73,6 +75,7 @@ router.post('/showMessagesPage/:page',auth.userRequired,message.showMessagesPage
 
 //**************************************回复*************************************
 router.post('/:question_id/reply',auth.userRequired,reply.add);//一级回复
+router.post('/:question_id/comment',auth.userRequired,comment.add);//二级回复
 router.get('/allReplies/:id',reply.replayAll);
 module.exports = router;
 

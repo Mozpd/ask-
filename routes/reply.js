@@ -73,7 +73,7 @@ exports.replayAll = (req,res,next)=>{
     let id = req.params.id;
     console.log(id);
     Reply.getRepliesByQuestionIdAll(id,(err,all)=>{
-        return res.render('reply-list',{
+        return res.render('reply-list2',{
             all:all,
             layout:''
         })

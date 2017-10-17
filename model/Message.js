@@ -31,7 +31,7 @@ const MessageSchema = new Schema({
         require:true,
         ref:'Question' //关联question表
     },
-    reply_id:{
+    reply_id:{//用户在回复某人的时候 或者在@某人的时候 这个id会存在
         type:String,
         require:true,
         ref:'Reply' //关联reply表
