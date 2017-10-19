@@ -35,10 +35,17 @@ const at = {
         names = _.uniq(names);
         return names
     },
-    sendMessageToMentionUsers:(text,questionId,authorId,replyId,callback)=>{
+    sendMessageToMentionUsers:(text,questionId,authorId,replyId,commentId,callback)=>{
+        //不传replyId和commentId的情况
         if(typeof replyId == 'function'){
             callback = replyId;
             replyId = null;
+            commentId = null;
+        }
+        //不传commentId的情况
+        if(typeof commentId == 'function'){
+            callback = commentId;
+            commentId = null;
         }
         callback = callback || _.noop();
         User.getUserByNames(at.fetchUser(text),(err,users)=>{

@@ -40,7 +40,7 @@ exports.add = (req,res,next)=>{
                 let author_name = author.name;
                 let regex = new RegExp('@' + author_name + '\\b(?!\\])', 'g');
                 let newContent = content.replace(regex,'');
-                at.sendMessageToMentionUsers(newContent,reply.question_id,reply.author,reply._id,(err,msg)=>{
+                at.sendMessageToMentionUsers(newContent,reply.question_id._id,reply.author,reply._id,(err,msg)=>{
                     if(err){
                         res.end(err);
                     }
@@ -60,7 +60,7 @@ exports.add = (req,res,next)=>{
             let question_author = reply.question_id.author;
             if(question_author != req.session.user._id){
                 //发消息
-                message.sendReplyMessage(question_author,req.session.user._id,reply.question_id._id,reply._id);
+                message.sendReplyMessage(question_author,req.session.user._id,reply.question_id._id,reply._id,null);
             }
             return res.json({message:'success'});
         }).catch(err=>{

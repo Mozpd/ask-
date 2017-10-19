@@ -36,6 +36,10 @@ const MessageSchema = new Schema({
         require:true,
         ref:'Reply' //关联reply表
     },
+    comment_id:{//这个消息所在的二级回复的ID
+        type:String,
+        ref:"Comment"
+    },
     has_read:{
         type:Boolean,
         default:false

@@ -1,0 +1,22 @@
+<div class="aw-item">
+    <div class="mod-head">
+        <a class="anchor"></a>
+        <a class="aw-user-img aw-border-radius-5 pull-right" href="#">
+            <img src="<%= comment.author.avatar%>">
+        </a>
+        <div class="title">
+            <p>
+                <a class="aw-user-name" href="/user/<%= comment.author.name%>"><%= comment.author.name%></a>
+            </p>
+        </div>
+    </div>
+    <div class="mod-body clearfix">
+        <div class="markitup-box">
+           <%- comment.content%>
+            <span class="text-color-999 pull-right">
+                        <%= comment.create_time_ago()%>
+                    </span>
+        </div>
+    </div>
+    <div class="mod-footer"></div>
+</div>
