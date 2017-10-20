@@ -50,5 +50,11 @@ const CommentSchema = new Schema({
 })
 //当前的模型就会有BaseModel里面的方法了.
 CommentSchema.plugin(BaseModel);
+CommentSchema.statics = {
+    getCommentsByReplyId:function (reply_id,callback) {
+        Comment.find({'reply_id':reply_id},'',{sort:'create_time'}).populate('author')
+            .populate('comment_target_id').populate('question_id').exec(callback)
+    }
+};
 const Comment = mongoose.model('Comment',CommentSchema);
 module.exports = Comment

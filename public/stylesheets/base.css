@@ -51,3 +51,8 @@
 .public {
     width:90% !important;
 }
+/*双击选中按钮头像等问题。
+*/
+button,input,img,a {
+    user-select: none;
+}

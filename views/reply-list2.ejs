@@ -44,17 +44,20 @@
                 <div align="center" class="aw-padding10" style="border-bottom:1px solid #F5F5F5;">
                     <p><%= reply.comment_num%>条评论</p>
                 </div>
-                <div class="text-center" style="font-size: 30px;line-height: 50px">
+                <div class="text-center loading" style="font-size: 30px;line-height: 50px">
                     <i class="fa fa-spinner fa-pulse"></i>
                 </div>
-                <form action="/<%= reply._id%>/comment" style="background:none;padding:10px 0px">
+                <!--二级回复列表插入的位置-->
+                <div class="add-comment-list"></div>
+
+                <form action="/<%= reply.question_id%>/comment" style="background:none;padding:10px 0px">
                     <input type="hidden" name="reply_id"value="<%= reply._id%>">
                     <input type="hidden" name="comment_target_id" value="">
 
                     <div class="aw-comment-box-main">
                         <div class="comment_markdown pull-left public" placeholder="请写下你的评论..." contenteditable></div>
                         <div class="pull-right">
-                            <input type="submit" class="btn btn btn-success commentBtn" disabled value="评论">
+                            <input type="submit" class="btn btn btn-success commentBtn commentBtn-one" disabled value="评论">
 
                         </div>
                         <div class="clearfix"></div>
@@ -65,4 +68,4 @@
     </div>
 </div>
 <% }) %>
-<script type="text/javascript" src="/javascripts/public.js"></script>
+

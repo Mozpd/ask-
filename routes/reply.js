@@ -26,6 +26,7 @@ exports.add = (req,res,next)=>{
             //先把对应的关联查询出来，获得完整的reply表信息
             let result =  Reply.findOne({'_id':reply._id}).populate('question_id').populate('author');
             return result;
+
         }).then(reply=>{
             //2.更新question表里面的信息
             reply.question_id.last_reply = reply._id;
@@ -33,7 +34,7 @@ exports.add = (req,res,next)=>{
             reply.question_id.last_reply_author = reply.author;
             reply.question_id.comment_num += 1;
             reply.question_id.save();
-            return reply;
+            return reply
         }).then(reply=>{
             //3.给当前@的人发送消息，里面不包含作者
             User.findOne({'_id':reply.question_id.author}).then(author=>{
@@ -69,10 +70,14 @@ exports.add = (req,res,next)=>{
     }
 };
 exports.replayAll = (req,res,next)=>{
-    console.log(1)
+   /* console.log(1)*/
     let id = req.params.id;
-    console.log(id);
+    /*console.log(id);*/
     Reply.getRepliesByQuestionIdAll(id,(err,all)=>{
+        all.forEach(function(a,index){
+            a.content = at.linkUsers(a.content);
+        })
+        console.log(all)
         return res.render('reply-list2',{
             all:all,
             layout:''

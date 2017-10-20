@@ -1,4 +1,4 @@
-//引入Ccomment表
+//引入Comment表
 const Comment = require('../model/Comment');
 //引入Reply表
 const Reply  = require('../model/Reply');
@@ -81,7 +81,7 @@ exports.add = (req,res,next)=>{
             if(comment.comment_target_id == null && comment.reply_id.author != req.session.user._id){
                 //默认是给一级回复作者发消息
                 message.sendCommentMessage(comment.reply_id.author,comment.author,comment.question_id,comment.reply_id,comment._id);
-            }else if(comment.comment_target_id != null && comment.comment_target_id != req.session.user._id){
+            }else if(comment.comment_target_id != null && comment.comment_target_id._id != req.session.user._id){
                 //给comment_target_id 对应的人发送消息
                 message.sendCommentMessage(comment.comment_target_id,comment.author,comment.question_id,comment.reply_id,comment._id);
             }
@@ -101,5 +101,20 @@ exports.add = (req,res,next)=>{
     }
 };
 exports.show = (req,res,next)=>{
-
+    //一级回复的ID 号 根据这个查询条件查询出所有对应的二级回复
+    let reply_id = req.params.reply_id;
+    Comment. getCommentsByReplyId(reply_id,(err,comments)=>{
+        if (err){
+            res.end(err)
+        }else {
+            /*console.log(comments);*/
+            comments.forEach(function(a,index){
+                a.content = at.linkUsers(a.content);
+            })
+            res.render('comments',{
+                comments:comments,
+                layout:''
+            })
+        }
+    })
 }
