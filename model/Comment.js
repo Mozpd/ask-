@@ -24,7 +24,7 @@ const CommentSchema = new Schema({
         ref:'User',
     },
     //回复对应的人
-    common_target_id:{
+    comment_target_id:{
         type:String,
         ref:'User',
     },
@@ -51,9 +51,18 @@ const CommentSchema = new Schema({
 //当前的模型就会有BaseModel里面的方法了.
 CommentSchema.plugin(BaseModel);
 CommentSchema.statics = {
-    getCommentsByReplyId:function (reply_id,callback) {
+    getTotalsByReplyId:function (reply_id,callback) {
         Comment.find({'reply_id':reply_id},'',{sort:'create_time'}).populate('author')
             .populate('comment_target_id').populate('question_id').exec(callback)
+    },
+    getCommentsByReplyId:function (reply_id,callback) {
+        Comment.find({'reply_id':reply_id},'',{sort:'create_time'}).populate('author')
+            .populate('comment_target_id').populate('question_id').limit(5).exec(callback)
+    },
+    //显示分页后的 二级回复列表
+    showCommentsPage:(reply_id,startNum,limit,callback)=>{
+        Comment.find({'reply_id':reply_id},'',{sort:'create_time'}).populate('author')
+            .populate('comment_target_id').populate('question_id').skip(startNum).limit(limit).exec(callback)
     }
 };
 const Comment = mongoose.model('Comment',CommentSchema);

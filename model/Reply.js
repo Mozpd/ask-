@@ -55,6 +55,13 @@ ReplySchema.statics = {
     },
     getRepliesByQuestionIdAll:(question_id,callback)=>{
         Reply.find({'question_id':question_id}).sort({'create_time':1}).populate('author').exec(callback)
+    },
+    getRepliesByAuthorId:(author_id,opt,callback)=>{
+        Reply.find({author:author_id},{},opt).populate('author').populate('question_id').then(replies=>{
+            return callback(null,replies);
+        }).catch(err=>{
+            return callback(err);
+        })
     }
 }
 const Reply = mongoose.model('Reply',ReplySchema);

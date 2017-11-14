@@ -9,6 +9,10 @@ const fs = require('fs');
 const gm = require('gm');
 //引入User
 const User = require('../model/User');
+//引入Question
+const Question = require('../model/Question');
+//引入Reply
+const Reply = require('../model/Reply');
 const validator = require('validator');
 //个人设置的处理函数
 exports.setting = (req,res,next)=>{
@@ -96,18 +100,99 @@ exports.updateUser = (req,res,next)=>{
 }
 //用户排名
 exports.all = (req,res,next)=>{
-
+    res.render('users',{
+        title: '用户界面',
+        layout: 'indexTemplate',
+    })
 }
 //个人信息
 exports.index = (req,res,next)=>{
+    //得到用户的姓名
+    let name = req.params.name;
+    //根据用户的姓名，查到用户的所对应的信息
+    User.getUserByName(name,(err,user)=>{
+        if(!user){
+            return res.render('error',{
+                error:'',
+                message:'该用户不存在的'
+            })
+        }else {
+            let query = {author:user._id};
+            let opt = {limit:5,sort:'-create_time'};
+            //1.这个用户发布的文章 Question 表
+            Question.getQuestionByQuery(query,opt,(err,questions)=>{
+                if(err){
+                    return res.render('error',{error:err,message:''});
+                }
+                //2.这个用户回复过的问题的Reply表
+                Reply.getRepliesByAuthorId(user._id,{limit:5,sort:'-create_time'},(err,replies)=>{
+                  return  res.render('user-center',{
+                        title: '个人中心界面',
+                        layout: 'indexTemplate',
+                        resource:mapping.userCenter,
+                        user:user,
+                       questions2:questions,
+                       replies:replies
+                    })
+                })
+            })
+        }
+    })
+
 
 }
 //发布问题列表
 exports.questions = (req,res,next)=>{
-
+    //用户发布所有的问题列表
+    let name = req.params.name;
+    User.getUserByName(name,(err,user)=>{
+        if(!user){
+            return res.res.render('error',{
+                error:'',
+                message:'该用户不存在啊'
+            })
+        }else {
+            let query = {author:user._id};
+            let opt = {sort:'-create_time'};
+            Question.getQuestionByQuery(query,opt,(err,questions)=>{
+                if(err){
+                    return res.render('error',{error:err,message:''});
+                }
+                res.render('userCenter-questions',{
+                    title:'个人中心页面',
+                    layout:'indexTemplate',
+                    resource:mapping.userCenter,
+                    user:user,
+                   questions2:questions,
+                })
+            })
+        }
+    })
 }
 //回复问题列表
 exports.replys = (req,res,next)=>{
+    //得到用户的姓名
+    let name = req.params.name;
+    //根据用户的姓名 查到用户所对应的信息
+    User.getUserByName(name,(err,user)=>{
+        if(!user){
+            return res.render('error',{
+                error:'',
+                message:'该用户不存在的'
+            })
+        }else {
+            //2.这个用户回复过的问题
+            Reply.getRepliesByAuthorId(user._id,{sort:'-create_time'},(err,replies)=>{
+                return res.render('userCenter-replys',{
+                    title:'个人中心页面',
+                    layout:'indexTemplate',
+                    resource:mapping.userCenter,
+                    replies:replies,
+                    user:user
+                })
+            })
+        }
+    })
 
 }
 

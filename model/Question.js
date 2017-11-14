@@ -100,6 +100,28 @@ QuestionSchema.statics = {
     //通过ID来查询一个问题
     getQuestionById:(id,callback)=>{
         Question.findOne({'_id':id}).populate('author').exec(callback)
+    },
+    //根据条件获取文章列表
+    getQuestionByQuery:(query,opt,callback)=>{
+        query.deleted = false;
+        Question.find(query,{},opt).populate('author').populate('last_reply')
+            .populate('last_reply_author').then((questions)=>{
+            if (questions.length == 0){
+                return callback(null,[]);
+            }
+            //如果这篇文章的作者已经被删除 ，那么它这篇文章也设置为空
+            //
+            return callback(null,questions);
+        }).catch(err=>{
+            return callback(err)
+        })
+    },
+    getCountByQuery:(query,callback)=>{
+       Question.count(query).then((all_articles)=>{
+            return callback(null,all_articles);
+        }).catch(err=>{
+            return callback(err);
+        })
     }
 }
 QuestionSchema.plugin(BaseModel);

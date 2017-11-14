@@ -36,8 +36,10 @@ exports.postCreate = (req,res,next)=>{
         return res.end(error);
     }else{
         //验证成功后
+
         req.body.author = req.session.user._id;
         let newQuestion = new Question(req.body);
+        newQuestion.category = category;
         newQuestion.save().then(question=>{
             //某个人发布一篇文章，积分+5,发布数量+1
             User.getUserById(req.session.user._id,(err,user)=>{
@@ -65,11 +67,13 @@ exports.postCreate = (req,res,next)=>{
 }
 //编辑问题的处理函数
 exports.edit = (req,res,next)=>{
-
+    res.render('edit-question', {
+        title: '编辑问题页面',
+        layout: 'indexTemplate',
+    })
 }
 //编辑行为的处理函数
 exports.postEdit = (req,res,next)=>{
-
 }
 //删除行为的处理函数
 exports.delete = (req,res,next)=>{

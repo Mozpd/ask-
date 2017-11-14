@@ -38,7 +38,7 @@ router.get('/question/create',auth.userRequired,question.create);
 //发布问题的行为
 router.post('/question/create',auth.userRequired,question.postCreate);
 //编辑问题的页面
-router.get('/question/:id/edit',auth.userRequired,question.edit);
+router.get('/question/edit',auth.userRequired,question.edit);
 //编辑问题的行为
 router.post('/question/:id/edit',auth.userRequired,question.postEdit);
 //删除问题的行为
@@ -77,6 +77,7 @@ router.post('/showMessagesPage/:page',auth.userRequired,message.showMessagesPage
 router.post('/:question_id/reply',auth.userRequired,reply.add);//一级回复
 router.post('/:question_id/comment',auth.userRequired,comment.add);//二级回复
 router.get('/:reply_id/showComments',auth.userRequired,comment.show);
+router.post('/showCommentsPage/:reply_id/:page',auth.userRequired,comment.showCommentsPage);
 router.get('/allReplies/:id',reply.replayAll);
 module.exports = router;
 

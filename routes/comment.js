@@ -103,18 +103,77 @@ exports.add = (req,res,next)=>{
 exports.show = (req,res,next)=>{
     //一级回复的ID 号 根据这个查询条件查询出所有对应的二级回复
     let reply_id = req.params.reply_id;
-    Comment. getCommentsByReplyId(reply_id,(err,comments)=>{
+  let comment1 = new Promise((resolve,reject)=>{
+      Comment.getTotalsByReplyId(reply_id,(err,count)=>{
+        if (err){
+            reject(err);
+        }else {
+            resolve(count)
+        }
+      })
+  });
+    let comment2 = new Promise((resolve,reject)=>{
+      Comment.getCommentsByReplyId(reply_id,(err,comments)=>{
+          if (err){
+              reject(err);
+          }else {
+              resolve(comments)
+          }
+      })
+    });
+    Promise.all([comment1,comment2]).then((result)=>{
+        let counts = result[0].length;
+        let comments = result[1];
+        let limit = 5;
+        let totalPage = Math.ceil(counts/limit);
+        comments.forEach(function (a,index) {
+            a.content = at.linkUsers(a.content);
+        });
+        let pageArr = [];
+        for(let i=1;i<=totalPage;i++){
+            pageArr.push(i)
+        }
+        res.render('comments',{
+            comments:comments,
+            layout:'',
+            pageArr:pageArr,
+            currentPage:1
+        })
+    })
+
+    /*Comment.getCommentsByReplyId(reply_id,(err,comments)=>{
         if (err){
             res.end(err)
         }else {
-            /*console.log(comments);*/
             comments.forEach(function(a,index){
                 a.content = at.linkUsers(a.content);
             })
+           /!* console.log(comments.length)*!/
+            let limit = 5;
+            let totalPage = Math.ceil(17/limit);
+            let pageArr = [];
+            for(let i=1;i<=totalPage;i++){
+                pageArr.push(i)
+            }
             res.render('comments',{
                 comments:comments,
-                layout:''
+                layout:'',
+                pageArr:pageArr,
+                currentPage:1
             })
         }
+    })*/
+}
+
+exports.showCommentsPage = (req,res,next)=>{
+    let reply_id = req.params.reply_id;
+    let page = req.params.page;
+    let limit = 5;
+    let startNum = (page - 1) * limit;
+    Comment.showCommentsPage(reply_id,startNum,limit,(err,comments)=>{
+        res.render('show-comments',{
+            comments:comments,
+            layout:''
+        })
     })
 }

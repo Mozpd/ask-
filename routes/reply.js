@@ -72,12 +72,12 @@ exports.add = (req,res,next)=>{
 exports.replayAll = (req,res,next)=>{
    /* console.log(1)*/
     let id = req.params.id;
-    /*console.log(id);*/
+   /* console.log(id);*/
     Reply.getRepliesByQuestionIdAll(id,(err,all)=>{
         all.forEach(function(a,index){
             a.content = at.linkUsers(a.content);
         })
-        console.log(all)
+        /*console.log(all)*/
         return res.render('reply-list2',{
             all:all,
             layout:''
